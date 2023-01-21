@@ -78,7 +78,8 @@ def tabulate_data(json_data):
 print(get_item_by_id(4151))                   # Change this ID to whatever you want.
 print(get_item_by_name('Zul-andra teleport')) # Change this name to whatever you want.
 
-''' example output:
+''' 
+example output by ID lookup:
 +-----------+------+-----------+-----------+---------+---------+------------+----------+---------+---------+----------+---------+
 | examine   |   id | members   |   lowalch |   limit |   value |   highalch | icon     | name    |   price |   volume |    last |
 +===========+======+===========+===========+=========+=========+============+==========+=========+=========+==========+=========+
@@ -86,6 +87,16 @@ print(get_item_by_name('Zul-andra teleport')) # Change this name to whatever you
 | from the  |      |           |           |         |         |            | whip.png | whip    |         |          |         |
 | Abyss.    |      |           |           |         |         |            |          |         |         |          |         |
 +-----------+------+-----------+-----------+---------+---------+------------+----------+---------+---------+----------+---------+
+
+
+example output by name lookup:
++------------+-------+-----------+-----------+---------+---------+------------+------------+-----------+---------+----------+--------+
+| examine    |    id | members   |   lowalch |   limit |   value |   highalch | icon       | name      |   price |   volume |   last |
++============+=======+===========+===========+=========+=========+============+============+===========+=========+==========+========+
+| Teleports  | 12938 | True      |         4 |   10000 |      10 |          6 | Zul-andra  | Zul-andra |   21371 |    38835 |  22496 |
+| you to     |       |           |           |         |         |            | teleport.p | teleport  |         |          |        |
+| Zul-Andra. |       |           |           |         |         |            | ng         |           |         |          |        |
++------------+-------+-----------+-----------+---------+---------+------------+------------+-----------+---------+----------+--------+
 '''           
                 
 
