@@ -1,6 +1,8 @@
 import requests
 import time
 import json
+import pandas as pd
+from tabulate import tabulate
 
 
 def get_return_item_info():
@@ -40,8 +42,11 @@ def get_item_by_id(item_id):
     
     items = get_return_item_info()
     
+    json_ = json.dumps(items[str(item_id)], indent=4)
     
-    return json.dumps(items[str(item_id)], indent=4)
+    tabbed_json = tabulate_data(json_)
+    
+    return tabbed_json
 
 
 def get_item_by_name(item_name):
@@ -52,28 +57,35 @@ def get_item_by_name(item_name):
      
     for item in items:
         if item_name.lower() in items[item]['name'].lower():
-            return json.dumps(items[item], indent=4)
+            
+            json_ = json.dumps(items[str(item)], indent=4)
+            
+            tabbed_json = tabulate_data(json_)
+            
+            return tabbed_json
+        
+
+def tabulate_data(json_data):
+    """Takes json data and turns it into a tabulated dataframe.
+    """
+    
+    df = pd.read_json(json_data, orient='index').T  
+    tab = tabulate(df, headers='keys', tablefmt='grid', showindex=False, maxcolwidths=10)
+    
+    return tab
         
             
-print(get_item_by_id(4151))
-
-print(get_item_by_name('Zul-andra teleport'))
+print(get_item_by_id(4151))                   # Change this ID to whatever you want.
+print(get_item_by_name('Zul-andra teleport')) # Change this name to whatever you want.
 
 ''' example output:
-{
-    "examine": "A weapon from the Abyss.",
-    "id": 4151,
-    "members": true,
-    "lowalch": 48000,
-    "limit": 70,
-    "value": 120001,
-    "highalch": 72000,
-    "icon": "Abyssal whip.png",
-    "name": "Abyssal whip",
-    "price": 1281075,
-    "volume": 4248,
-    "last": 1297502
-}
++-----------+------+-----------+-----------+---------+---------+------------+----------+---------+---------+----------+---------+
+| examine   |   id | members   |   lowalch |   limit |   value |   highalch | icon     | name    |   price |   volume |    last |
++===========+======+===========+===========+=========+=========+============+==========+=========+=========+==========+=========+
+| A weapon  | 4151 | True      |     48000 |      70 |  120001 |      72000 | Abyssal  | Abyssal | 1281075 |     4248 | 1297502 |
+| from the  |      |           |           |         |         |            | whip.png | whip    |         |          |         |
+| Abyss.    |      |           |           |         |         |            |          |         |         |          |         |
++-----------+------+-----------+-----------+---------+---------+------------+----------+---------+---------+----------+---------+
 '''           
                 
 
