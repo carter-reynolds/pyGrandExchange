@@ -32,8 +32,9 @@ def get_return_item_info():
             else:
                 # For now, just pull the data once and finish.
                 break
-            
-    return dict(response.json())
+    full_dict = dict(response.json())
+    
+    return full_dict
 
 
 def get_item_by_id(item_id):
@@ -56,13 +57,22 @@ def get_item_by_name(item_name):
     items = get_return_item_info() 
      
     for item in items:
-        if item_name.lower() in items[item]['name'].lower():
+        
+        try:
+            if item_name.lower() == items[str(item)]['name'].lower():
+                
+                json_ = json.dumps(items[str(item)], indent=4)
+                
+                tabbed_json = tabulate_data(json_)
+                
+                return tabbed_json
             
-            json_ = json.dumps(items[str(item)], indent=4)
-            
-            tabbed_json = tabulate_data(json_)
-            
-            return tabbed_json
+            else:
+                pass
+        except KeyError:
+            pass
+        except TypeError:
+            return "Item not found."
         
 
 def tabulate_data(json_data):
@@ -73,31 +83,33 @@ def tabulate_data(json_data):
     tab = tabulate(df, headers='keys', tablefmt='grid', showindex=False, maxcolwidths=10)
     
     return tab
+
+def menu():
+    
+    from rich import print
+    
+    print('[red]Grand Exchange Price Lookup Tool[/red]')
+    print('-' * 50)
+    print('[green]Enter the [yellow underline]Item ID[/yellow underline] or '
+          '[yellow underline]Item Name[/yellow underline] to lookup the price of an item.[/green]')
+    print('[blue]Enter "exit" to exit the program.[/blue]')
+    
+    while True:
+        user_input = input('Enter item ID or name: ')
         
+        if user_input.lower() == 'exit':
+            print('Exiting...')
+            return exit()
+        
+        elif user_input.isdigit():
+            print(get_item_by_id(user_input))
             
-print(get_item_by_id(4151))                   # Change this ID to whatever you want.
-print(get_item_by_name('Zul-andra teleport')) # Change this name to whatever you want.
-
-''' 
-example output by ID lookup:
-+-----------+------+-----------+-----------+---------+---------+------------+----------+---------+---------+----------+---------+
-| examine   |   id | members   |   lowalch |   limit |   value |   highalch | icon     | name    |   price |   volume |    last |
-+===========+======+===========+===========+=========+=========+============+==========+=========+=========+==========+=========+
-| A weapon  | 4151 | True      |     48000 |      70 |  120001 |      72000 | Abyssal  | Abyssal | 1281075 |     4248 | 1297502 |
-| from the  |      |           |           |         |         |            | whip.png | whip    |         |          |         |
-| Abyss.    |      |           |           |         |         |            |          |         |         |          |         |
-+-----------+------+-----------+-----------+---------+---------+------------+----------+---------+---------+----------+---------+
-
-
-example output by name lookup:
-+------------+-------+-----------+-----------+---------+---------+------------+------------+-----------+---------+----------+--------+
-| examine    |    id | members   |   lowalch |   limit |   value |   highalch | icon       | name      |   price |   volume |   last |
-+============+=======+===========+===========+=========+=========+============+============+===========+=========+==========+========+
-| Teleports  | 12938 | True      |         4 |   10000 |      10 |          6 | Zul-andra  | Zul-andra |   21371 |    38835 |  22496 |
-| you to     |       |           |           |         |         |            | teleport.p | teleport  |         |          |        |
-| Zul-Andra. |       |           |           |         |         |            | ng         |           |         |          |        |
-+------------+-------+-----------+-----------+---------+---------+------------+------------+-----------+---------+----------+--------+
-'''           
+        else:
+            print(get_item_by_name(user_input))
+            
+        continue
+       
+menu()        
                 
 
 
